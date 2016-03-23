@@ -24,12 +24,16 @@
 
             // note the use of callbacks!
             // Restful syntax: create = add one to that object
-            factory.create = function(info, callback) {
-                friends.push({
-                    name: info.name,
-                    age: info.age
+            factory.create = function(data, callback) {
+                console.log("factory.new data:", data);
+                $http.post('/friends', data)
+                .success(function() {
+                    console.log("post response");
+                    callback(friends);
+                })
+                .catch (function(err){
+                    console.log("err =", err );
                 });
-                callback(friends);
             };
             return factory;
         });
@@ -46,11 +50,7 @@
                 // note the use of callbacks here
                 FriendFactory.create($scope.new_friend, function() {
                     console.log("new friend =", $scope.new_friend);
-                    //load all the friends
-                    FriendFactory.index(function(data) {
-                        $scope.friends = data;
-                        // anything else that you want to happen after storing friends to $scope
-                    });
+                    $scope.friends.push($scope.new_friend);
                     $scope.new_friend = {};
                 });
             };

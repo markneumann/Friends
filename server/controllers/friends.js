@@ -9,12 +9,35 @@ module.exports = (function() {
     return {
         // notice how index in the factory(client side) is calling the index method(server side)
         index: function(req, res) {
-            Friend.find({}, function(err, results) {
-                if (err) {
-                    console.log(err);
-                } else {
+            console.log("index: ", req.url);
+            Friend.find()
+            .then(function(results){
                     res.json(results);
-                }
+            })
+            .catch (function(err){
+                console.log(err);
+                res.status(500); // send back http 200 status if successful
+                res.json({error: err});
+            });
+        },
+
+        create: function(req, res) {
+            // console.log("new req: ", req.body);
+            var newFriend = new Friend({
+                name: req.body.name,
+                age: req.body.age
+            });
+            // console.log("newFriend: ",newFriend);
+            newFriend.save()
+            .then(function() {
+                console.log("return 200");
+                res.status(200); // send back http 200 status if successful
+                res.json({success: true});
+            })
+            .catch (function(err){
+                console.log(err);
+                res.status(500); // send back http 200 status if successful
+                res.json({error: err});
             });
         }
     };

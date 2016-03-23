@@ -10,7 +10,6 @@ app.use(bodyParser.json());
 //
 // set up a static file server that points to the "client" directory
 app.use(express.static(path.join(__dirname, './client')));
-
 //mongoose
 require('./server/config/mongoose.js');
 
