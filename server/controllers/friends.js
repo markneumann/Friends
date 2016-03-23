@@ -41,12 +41,7 @@ module.exports = (function() {
         },
 
         remove: function(req, res) {
-            // console.log("new req: ", req.body);
-            // var newFriend = new Friend({
-            //     name: req.body.name,
-            //     age: req.body.age
-            // });
-            // console.log("newFriend: ",newFriend);
+            console.log("remove req: ", req.paramss);
             Friend.remove({_id: req.params.id})
             .then(function() {
                 console.log("return 200");

@@ -36,7 +36,7 @@
 
             factory.remove = function(data, callback) {
                 console.log("factory.remove data:", data);
-                $http.get('/remove/' + id)
+                $http.get('/remove/' + data)
                 .success(function() {
                     console.log("post response");
                     callback(friends);
@@ -67,12 +67,18 @@
                 });
             };
 
-            $scope.removefriend = function() {
-                // note the use of callbacks here
-                FriendFactory.remove($scope.friend._id, function() {
-                    console.log("remove friend =", $scope.friend._id);
-                    $scope.friends.pop($scope.friend);
-                });
+            $scope.removefriend = function(friend) {
+                var removeThisFriend =$scope.friends.indexOf(friend);
+                console.log('removefriend: ', removeThisFriend);
+                console.log('friends: ', $scope.friends[removeThisFriend]._id);
+                if(~removeThisFriend){
+                    var remove_id = $scope.friends[removeThisFriend]._id;
+                    // note the use of callbacks here
+                    FriendFactory.remove(remove_id, function() {
+                        console.log("remove friend =", removeThisFriend);
+                        $scope.friends.splice(removeThisFriend,1);
+                    });
+                }
             };
 
         });
@@ -86,8 +92,8 @@
     <ul>
         <!-- here is where we are going to display friends -->
         <li ng-repeat="friend in friends | filter: filter_name">
-            {{friend.name}}, {{friend.age}}
-            <!-- {{friend.name}}, {{friend.age}} - <a ng-click='removeFriend(friend)'>Delete</a> -->
+            <!-- {{friend.name}}, {{friend.age}} -->
+            {{friend.name}}, {{friend.age}} - <a href="" ng-click='removefriend(friend)'>Delete</a>
         </li>
     </ul>
     <h1>Add a Friend</h1>
