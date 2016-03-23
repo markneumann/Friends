@@ -8,6 +8,5 @@ module.exports = function(app) {
 // verb: get, plural of target as the URI is the RESTful index method (it returns all friends)
   app.get('/friends', friends.index);
   app.post('/friends', friends.create);
-  // app.post('/remove', friends.remove);
-
+  // app.post('/remove/:id', friends.remove);
 };

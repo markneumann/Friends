@@ -12,7 +12,7 @@
         friends_app.factory('FriendFactory', function($http) {
             var factory = {};
             var friends = [];
-            //Restful syntax: index = get all that object
+
             factory.index = function(callback) {
                 console.log("factory.index");
                 // Where do we get access to $http?
@@ -22,8 +22,6 @@
                 });
             };
 
-            // note the use of callbacks!
-            // Restful syntax: create = add one to that object
             factory.create = function(data, callback) {
                 console.log("factory.new data:", data);
                 $http.post('/friends', data)
@@ -35,6 +33,19 @@
                     console.log("err =", err );
                 });
             };
+
+            factory.remove = function(data, callback) {
+                console.log("factory.remove data:", data);
+                $http.get('/remove/' + id)
+                .success(function() {
+                    console.log("post response");
+                    callback(friends);
+                })
+                .catch (function(err){
+                    console.log("err =", err );
+                });
+            };
+
             return factory;
         });
 
@@ -46,6 +57,7 @@
                 $scope.friends = data;
                 // anything else that you want to happen after storing friends to $scope
             });
+
             $scope.addfriend = function() {
                 // note the use of callbacks here
                 FriendFactory.create($scope.new_friend, function() {
@@ -54,6 +66,15 @@
                     $scope.new_friend = {};
                 });
             };
+
+            $scope.removefriend = function() {
+                // note the use of callbacks here
+                FriendFactory.remove($scope.friend._id, function() {
+                    console.log("remove friend =", $scope.friend._id);
+                    $scope.friends.pop($scope.friend);
+                });
+            };
+
         });
     </script>
 </head>
@@ -66,13 +87,12 @@
         <!-- here is where we are going to display friends -->
         <li ng-repeat="friend in friends | filter: filter_name">
             {{friend.name}}, {{friend.age}}
+            <!-- {{friend.name}}, {{friend.age}} - <a ng-click='removeFriend(friend)'>Delete</a> -->
         </li>
     </ul>
     <h1>Add a Friend</h1>
-    <!-- objects and properties nothing scary -->
     <input type="text" ng-model="new_friend.name" placeholder="name">
     <input type="text" ng-model="new_friend.age" placeholder="age">
-    <!-- addfriend() is a method we are going to make in the angular controller -->
     <input type="submit" ng-click="addfriend()">
 </body>
 

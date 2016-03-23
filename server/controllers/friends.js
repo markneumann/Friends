@@ -7,7 +7,6 @@ var Friend = mongoose.model('friends');
 // note the immediate function and the object that is returned
 module.exports = (function() {
     return {
-        // notice how index in the factory(client side) is calling the index method(server side)
         index: function(req, res) {
             console.log("index: ", req.url);
             Friend.find()
@@ -39,6 +38,28 @@ module.exports = (function() {
                 res.status(500); // send back http 200 status if successful
                 res.json({error: err});
             });
+        },
+
+        remove: function(req, res) {
+            // console.log("new req: ", req.body);
+            // var newFriend = new Friend({
+            //     name: req.body.name,
+            //     age: req.body.age
+            // });
+            // console.log("newFriend: ",newFriend);
+            Friend.remove({_id: req.params.id})
+            .then(function() {
+                console.log("return 200");
+                res.status(200); // send back http 200 status if successful
+                res.json({success: true});
+            })
+            .catch (function(err){
+                console.log(err);
+                res.status(500); // send back http 200 status if successful
+                res.json({error: err});
+            });
         }
+
+
     };
 })();
